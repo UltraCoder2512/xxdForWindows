@@ -1,5 +1,6 @@
-Title: \n 
- \txxdForWindows
+Title:
+ 
+ xxdForWindows
 Description:
   An xxd utility for windows
   convert from text to binary to hex and back again!
