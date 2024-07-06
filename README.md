@@ -1,5 +1,4 @@
 Title:
- 
  xxdForWindows
 Description:
   An xxd utility for windows
