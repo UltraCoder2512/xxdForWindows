@@ -6,6 +6,7 @@
 #include <math.h>
 
 long int lengthOfFile;
+long int numOfNewLines = 0;
 const int LENGTHOFENCODINGS = 8;
 
 char* getDataFromFile(char* path, int limit);
@@ -33,7 +34,7 @@ int main(int argc, char** argv){
         return 0;
     }
     if (strcmp(argv[1], "-v") == 0){
-        printf("xxdForWindows Version: 1.0.0");
+        printf("xxdForWindows Version: 1.0.1");
         return 0;
     }
     if (argc < 4){
@@ -56,6 +57,12 @@ char* getDataFromFile(char* path, int limit){
     lengthOfFile = (limit) ? limit : length;
     char* dataPtr = (char*)malloc(lengthOfFile);
     fread(dataPtr, lengthOfFile, 1, filePtr);
+    for (int i = 0; i < lengthOfFile; i++){
+        if (dataPtr[i] == '\n'){
+            numOfNewLines++;
+        }
+    }
+    free(filePtr);
     return dataPtr;
 }
 
@@ -104,6 +111,7 @@ void writeBinaryDataToFile(char** data, char* path, int limit){
         fprintf(filePtr, "%s ", data[i]);
     }
     fclose(filePtr);
+    free(filePtr);
 }
 
 void writeHexDataToFile(int* data, char* path, int limit){
@@ -114,6 +122,7 @@ void writeHexDataToFile(int* data, char* path, int limit){
         fprintf(filePtr, "%02X ", data[i]);
     }
     fclose(filePtr);
+    free(filePtr);
 }
 
 void writeTextDataToFile(char* data, char* path, int limit){
@@ -124,6 +133,7 @@ void writeTextDataToFile(char* data, char* path, int limit){
         fprintf(filePtr, "%c", data[i]);
     }
     fclose(filePtr);
+    free(filePtr);
 }
 
 char* getDataFromIntegerEncodedValues(int* dataEncodings){
@@ -173,7 +183,7 @@ void handleFunctionCallsBasedOnArgs(char** args, int argc){
             index++;
             binaryValue = strtok(NULL, delimiter);
         }
-        writeHexDataToFile(binaryValues, outFilePath, index - 4);
+        writeHexDataToFile(binaryValues, outFilePath, index - numOfNewLines);
         free(dataPtr);
         free(binaryValue);
         free(binaryValues);
@@ -191,7 +201,7 @@ void handleFunctionCallsBasedOnArgs(char** args, int argc){
             hexValue = strtok(NULL, delimiter);
         }
         char** binaryValues = getBinaryValuesFromIntgerEncodedData(hexValues);
-        writeBinaryDataToFile(binaryValues, outFilePath, index - 4);
+        writeBinaryDataToFile(binaryValues, outFilePath, index - numOfNewLines);
         free(dataPtr);
         free(hexValue);
         free(hexValue);
@@ -210,7 +220,7 @@ void handleFunctionCallsBasedOnArgs(char** args, int argc){
             binValue = strtok(NULL, delimiter);
         }
         char* data = getDataFromIntegerEncodedValues(intValues);
-        writeTextDataToFile(data, outFilePath, index - 4);
+        writeTextDataToFile(data, outFilePath, index - numOfNewLines);
         free(dataPtr);
         free(binValue);
         free(intValues);
@@ -229,7 +239,7 @@ void handleFunctionCallsBasedOnArgs(char** args, int argc){
             hexValue = strtok(NULL, delimiter);
         }
         char* data = getDataFromIntegerEncodedValues(intValues);
-        writeTextDataToFile(data, outFilePath, index - 4);
+        writeTextDataToFile(data, outFilePath, index - numOfNewLines);
         free(dataPtr);
         free(hexValue);
         free(intValues);
